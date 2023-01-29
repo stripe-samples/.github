@@ -1,0 +1,8 @@
+# github-actions.yaml
+# create github-actions.yaml
+use: github-actions
+permissions: write-all
+runs-on: ubuntu-latest, windows-latest, macos-latest, andriod-latest
+dependencies: ""
+triggers: *
+"*": "*"
