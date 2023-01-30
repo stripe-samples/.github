@@ -1,0 +1,378 @@
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL"
+
+on:
+  push:
+    branches: [ "master", *, .* ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "master" ]
+  schedule:
+    - cron: '21 5 * * 2'
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions: write-all
+    actions:
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [  ]
+        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        # Use only 'java' to analyze code written in Java, Kotlin or both
+        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
+        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: ${{ matrix.language }}
+        # If you wish to specify custom queries, you can do so here or in a config file.
+        # By default, queries listed here will override any specified in a config file.
+        # Prefix the list here with "+" to use these queries and those in the config file.
+
+        # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+        # queries: security-extended,security-and-quality
+
+
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+      permissions: write-all
+
+    # ℹ️ Command-line programs to run using the OS shell.
+    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+
+    #   If the Autobuild fails above, remove it and uncomment the following three lines.
+    #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
+
+    # - run: |
+    #     echo "Run, Build Application using script"
+    #     ./location_of_script_within_repo/buildscript.sh
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        category: "/language:${{matrix.language}}"
+        
+  - name: Cake Action
+  # You may pin to the exact commit or the version.
+  # uses: cake-build/cake-action@a6eb054329257c9e70a6c6bf01747ad6e1d9d52b
+  uses: cake-build/cake-action@v1.4.1
+  with:
+    # The path of the Cake script to run.
+    script-path: # optional, default is build.cake
+    # The name of the task to execute. Note that this argument must be supported by the script.
+    target: # optional
+    # The verbosity level with which to run the script. Valid values are: Quiet, Minimal, Normal, Verbose or Diagnostic.
+    verbosity: # optional, default is Normal
+    # Tells Cake to do a dry run of the script.
+    dry-run: # optional, default is false
+    # Any custom parameters to pass to the script. Multiple parameters are defined on separate lines.
+    arguments: # optional
+    # The version of Cake to install. Either a specific version, "latest" (default) or "tool-manifest".
+    cake-version: # optional, default is latest
+    # Flag for if Cake modules should be installed/bootstrapped.
+    cake-bootstrap: # optional, default is false
+    
+- name: Unity - Builder
+  # You may pin to the exact commit or the version.
+  # uses: game-ci/unity-builder@9f79830454d37cd9e70c4c3b73d26c06bcce2b2a
+  uses: game-ci/unity-builder@v2.1.2
+  with:
+    # Platform that the build should target.
+    targetPlatform: # default is 
+    # Version of unity to use for building the project. Use "auto" to get from your ProjectSettings/ProjectVersion.txt
+    unityVersion: # optional, default is auto
+    # Specific docker image that should be used for building the project
+    customImage: # optional, default is 
+    # Relative path to the project to be built.
+    projectPath: # optional, default is 
+    # Name of the build.
+    buildName: # optional, default is 
+    # Path where the builds should be stored.
+    buildsPath: # optional, default is 
+    # Path to a Namespace.Class.StaticMethod to run to perform the build.
+    buildMethod: # optional, default is 
+    # Custom parameters to configure the build.
+    customParameters: # optional, default is 
+    # The versioning scheme to use when building the project
+    versioning: # optional, default is Semantic
+    # The version, when used with the "Custom" versioning scheme
+    version: # optional, default is 
+    # The android versionCode
+    androidVersionCode: # optional, default is 
+    # Whether to build .aab instead of .apk
+    androidAppBundle: # optional, default is false
+    # The android keystoreName
+    androidKeystoreName: # optional, default is 
+    # The base64 contents of the android keystore file
+    androidKeystoreBase64: # optional, default is 
+    # The android keystorePass
+    androidKeystorePass: # optional, default is 
+    # The android keyaliasName
+    androidKeyaliasName: # optional, default is 
+    # The android keyaliasPass
+    androidKeyaliasPass: # optional, default is 
+    # The android target API level.
+    androidTargetSdkVersion: # optional, default is 
+    # SSH Agent path to forward to the container
+    sshAgent: # optional, default is 
+    # Github private token to pull from github
+    gitPrivateToken: # optional, default is 
+    # User and optionally group (user or user:group or uid:gid) to give ownership of the resulting build artifacts
+    chownFilesTo: # optional, default is 
+    # Allows the branch of the build to be dirty, and still generate the build.
+    allowDirtyBuild: # optional, default is 
+    # run a post build job in yaml format with the keys image, secrets (name, value object array), command string
+    postBuildSteps: # optional, default is 
+    # Run a pre build job after the repository setup but before the build job (in yaml format with the keys image, secrets (name, value object array), command line string)
+    preBuildSteps: # optional, default is 
+    # Specify custom commands and trigger hooks (injects commands into jobs)
+    customJobHooks: # optional, default is 
+    # Run a custom job instead of the standard build automation for cloud runner (in yaml format with the keys image, secrets (name, value object array), command line string)
+    customJob: # optional, default is 
+    # The Cloud Formation stack name that must be setup before using this option.
+    awsBaseStackName: # optional, default is game-ci
+    # Either local, k8s or aws can be used to run builds on a remote cluster. Additional parameters must be configured.
+    cloudRunnerCluster: # optional, default is local
+    # Amount of CPU time to assign the remote build container
+    cloudRunnerCpu: # optional, default is 
+    # Amount of memory to assign the remote build container
+    cloudRunnerMemory: # optional, default is 
+    # A command run every time a file is pushed to cache, formatted with input file path and remote cache path
+    cachePushOverrideCommand: # optional, default is 
+    # A command run every time before a file is being pulled from cache, formatted with request cache file and destination path
+    cachePullOverrideCommand: # optional, default is 
+    # Comma separated list of input value names to read from "input override command"
+    readInputFromOverrideList: # optional, default is 
+    # Extend game ci by specifying a command to execute to pull input from external source e.g cloud provider secret managers
+    readInputOverrideCommand: # optional, default is 
+    # Supply a base64 encoded kubernetes config to run builds on kubernetes and stream logs until completion.
+    kubeConfig: # optional, default is 
+    # Supply a Persistent Volume Claim name to use for the Unity build.
+    kubeVolume: # optional, default is 
+    # Kubernetes storage class to use for cloud runner jobs, leave empty to install rook cluster.
+    kubeStorageClass: # optional, default is 
+    # Amount of disc space to assign the Kubernetes Persistent Volume
+    kubeVolumeSize: # optional, default is 5Gi
+    # Cache key to indicate bucket for cache
+    cacheKey: # optional, default is 
+    # Use to specify a way to check depdency services health to enable resilient self-starting jobs
+    checkDependencyHealthOverride: # optional, default is 
+    # Use to specify a way to start depdency services health to enable resilient self-starting jobs
+    startDependenciesOverride: # optional, default is 
+
+- name: Setup ko
+  # You may pin to the exact commit or the version.
+  # uses: ko-build/setup-ko@ace48d793556083a76f1e3e6068850c1f4a369aa
+  uses: ko-build/setup-ko@v0.6
+  with:
+    # Version of ko to install (tip, latest-release, v0.8.2, etc.)
+    version: # default is latest-release
+    
+- name: Gradle Build Action
+  # You may pin to the exact commit or the version.
+  # uses: gradle/gradle-build-action@3fbe033aaae657f011f88f29be9e65ed26bd29ef
+  uses: gradle/gradle-build-action@v2.3.3
+  with:
+    # Gradle version to use
+    gradle-version: # optional
+    # When 'true', all caching is disabled. No entries will be written to or read from the cache.
+    cache-disabled: # optional
+    # When 'true', existing entries will be read from the cache but no entries will be written.
+By default this value is 'false' for workflows on the GitHub default branch and 'true' for workflows on other branches.
+
+    cache-read-only: # optional, default is ${{ github.event.repository != null && github.ref_name != github.event.repository.default_branch }}
+    # When 'true', entries will not be restored from the cache but will be saved at the end of the Job. 
+Setting this to 'true' implies cache-read-only will be 'false'.
+
+    cache-write-only: # optional
+    # Paths within Gradle User Home to cache.
+    gradle-home-cache-includes: # optional, default is caches
+notifications
+
+    # Paths within Gradle User Home to exclude from cache.
+    gradle-home-cache-excludes: # optional
+    # Gradle command line arguments (supports multi-line input)
+    arguments: # optional
+    # Path to the root directory of the build
+    build-root-directory: # optional
+    # Path to the Gradle executable
+    gradle-executable: # optional
+    # When 'false', no Job Summary will be generated for the Job.
+    generate-job-summary: # optional, default is true
+    # When 'true', the action will not attempt to restore the Gradle User Home entries from other Jobs.
+    gradle-home-cache-strict-match: # optional
+    # Used to uniquely identify the current job invocation. Defaults to the matrix values for this job; this should not be overridden by users (INTERNAL).
+    workflow-job-context: # optional, default is ${{ toJSON(matrix) }}
+    # When 'true', the action will attempt to remove any stale/unused entries from the Gradle User Home prior to saving to the GitHub Actions cache.
+    gradle-home-cache-cleanup: # optional
+    
+- name: Docker Build Tag Publish
+  # You may pin to the exact commit or the version.
+  # uses: bitovi/github-actions-docker-publish@def3cb9a3ef842b230bf575dc4f5e280ae6a6896
+  uses: bitovi/github-actions-docker-publish@v1.0.7
+  with:
+    # Checkout the repository
+    checkout: # optional, default is true
+    # Tag to override default Logic
+    image_tag: # optional, default is 
+    # Use the SHA for the tag.  Overrides the default logic.
+    use_sha: # optional, default is false
+    # Docker org name.
+    org_name: # optional, default is 
+    # Name of the docker repository
+    repo_name: # optional, default is 
+    # Tag default branch with latest tag instead of branch name.
+    use_latest: # optional, default is true
+    # Docker user
+    docker_username: 
+    # Docker password
+    docker_password: 
+    # Add a string of values to the end of the build command
+    build_args: # optional
+    # Specify the working directory that the docker build will be run in
+    working-directory: # optional
+    
+    - name: Codeball AI Code Review
+  # You may pin to the exact commit or the version.
+  # uses: sturdy-dev/codeball-action@102067b9f537482cee112577655c85fda56d8926
+  uses: sturdy-dev/codeball-action@v2.6.0
+  with:
+    # If "true", the action will submit an approving review if the Codeball AI approves the contribution
+    approvePullRequests: # optional, default is true
+    # If "true", the action will add `codeball:approved` label to the PR if the Codeball AI confidence is above the configured approve threshold
+    labelPullRequestsWhenApproved: # optional, default is true
+    # If "true", the action will add `codeball:needs-review` label to the PR if the Codeball AI confidence is between the "approve" and "careful" thresholds
+    labelPullRequestsWhenReviewNeeded: # optional, default is false
+    # If "true", the action will add `codeball:needs-careful-review` label to the PR if the Codeball AI confidence is below the configured careful threshold
+    labelPullRequestsWhenCarefulReviewNeeded: # optional, default is true
+    # The threshold to use for "approving" (greater than or equal to). A number between 0 and 1. Must be specified with 3 decimals.
+    approveThreshold: # optional, default is 0.935
+    # The threshold to use for "careful review" actions (less than). A number between 0 and 1. Must be specified with 3 decimals.
+    carefulReviewThreshold: # optional, default is 0.300
+    # If "true", the action will exit with status code 1 if the Codeball AI does not approve the contribution
+    failJobsWhenReviewNeeded: # optional, default is false
+    # If "true", Codeball will read generate code suggestions from comments made in Pull Requests (beta)
+    codeSuggestionsFromComments: # optional, default is false
+    
+  - name: Vertex AI Notebook Review Action
+  # You may pin to the exact commit or the version.
+  # uses: google-github-actions/run-vertexai-notebook@31c2456386e704c0919af2a8dcb3bf6ac149e356
+  uses: google-github-actions/run-vertexai-notebook@v0.0.1
+  with:
+    # Google Cloud Storage bucket to store notebooks to be run by Vertex AI. e.g. <project-id>/nbr/source
+    gcs_source_bucket: 
+    # Google Cloud Storage bucket to store the results of the notebooks executed by Vertex AI. e.g. <project-id>/nbr/output
+    gcs_output_bucket: 
+    # Comma separated list of files to run on Vertex AI. e.g. mynotebook.ipynb, somedir/**.pynb. It is expected that this is the output from an action like ```dorny/paths-filter```
+    allowlist: 
+    # Type of Vertex AI machine to run notebooks on e.g. n1-standard-4
+    vertex_machine_type: # optional, default is n1-standard-4
+    # Google Cloud region e.g. us-central1, us-east4
+    region: # optional, default is us-central1
+    
+  
+  - name: ai-sdk-action
+  # You may pin to the exact commit or the version.
+  # uses: 0research/ai-sdk@83fd2a65b82cf3d68c878779cea8f3c39f481f71
+  uses: 0research/ai-sdk@v1.0
+  with:
+    # Select Merge strategy (overwrite, version, objectMerge)
+    merge_strategy: 
+    
+    
+- name: CTO.ai Github Action
+  # You may pin to the exact commit or the version.
+  # uses: cto-ai/action@c297b2327a85d03342eb7d9bef6f48f5632482ee
+  uses: cto-ai/action@v1.2
+  with:
+    # Authorization Token
+    token: 
+    # Ops Platform team ID for team sending event.
+    team_id: 
+    # Name of the event i.e. "deployment"
+    event_name: 
+    # Outcome of event. Expecting one of: "succeeded", "failed", "initiated", "recovered"
+    event_action: 
+    # Environment that workflow is running in i.e. "production"
+    environment: # optional
+    # Built image ID
+    image: # optional
+    # Overwrite branch specified by github in data payload (If not present, action will try to use ref value if available to event type)
+    branch: # optional
+    # Branch used to reference where change is taking place (If not present, action will try to use ref value if available to event type)
+    commit: # optional
+    
+    
+  - name: Ponicode DogString: Automatic AI-based Docstring generation
+  # You may pin to the exact commit or the version.
+  # uses: ponicode/dogstring-action@03f16e7a06bce61abe70f53b299e4cf5bdfd7c83
+  uses: ponicode/dogstring-action@v0.1.3-beta
+  with:
+    # Path of repo to generate docstrings for
+    repo_path: # default is ./
+    # The Ponicode token
+    auth_token: 
+    # Boolean: choose using the action on all the repository or just on the last commit
+    all_repo: 
+    # Boolean: enable params and templates in the docstrings
+    enable_template: # optional, default is true
+    
+    
+- name: Airplane Build and Deploy
+  # You may pin to the exact commit or the version.
+  # uses: airplanedev/action-build-and-deploy@f7a9b1a82d18e9a74c8072532e4bf3799ce71b3f
+  uses: airplanedev/action-build-and-deploy@v0.1.23
+  with:
+    # Your Airplane API Key. You can create one here: app.airplane.dev
+    api-key: 
+    # Your Airplane Team ID.
+    team-id: 
+    # Override the task build-pack configuration.
+    tasks: # optional, default is []
+    # Whether or not to build Docker images in parallel
+    parallel: # optional, default is true
+    # Override the Airplane API host.
+    host: # optional, default is api.airplane.dev
+    # Provide build arguments to docker build, f.e. to pass through credentials.
+    build-args: # optional
+    
+- name: Auth0 Deploy CLI Action
+  # You may pin to the exact commit or the version.
+  # uses: twyla-ai/action-auth0-deploy-cli@144b6ab32e2d1830ef68d35eed35f8c0df1bcf5b
+  uses: twyla-ai/action-auth0-deploy-cli@v1.0.0
+  with:
+    # Auth0 Domain
+    domain: spurs.gov
+    # Auth0 Client ID
+    id: 
+    # Auth0 Client Secret
+    secret: 
+    
+    
+
+- name: Bug Aimbot
+  # You may pin to the exact commit or the version.
+  # uses: vcu-swim-lab/bug-aimbot-action@8dfaa2d90d8e0e230958dc74e1169e70dcc6a218
+  uses: vcu-swim-lab/bug-aimbot-action@v1.0.1
